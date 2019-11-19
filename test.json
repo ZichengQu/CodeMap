@@ -1,0 +1,63 @@
+{
+    "DrawLines": [
+        {
+            "ID": 0,
+            "FilePath": "test.c",
+            "Lines": [
+                {"row": 10, "column": 0},
+                {"row": 34, "column": 7},
+                {"row": 51, "column": 0}
+            ],
+            "Errors":[
+                {"row": 10, "column": 0, "ErrorContent": "Test error 00. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldj)."}
+            ]
+        },
+        {
+            "ID": 1,
+            "FilePath": "test.c",
+            "Lines": [
+                {"row": 80, "column": 9},
+                {"row": 96, "column": 2},
+                {"row": 200, "column": 2},
+                {"row": 286, "column": 18},
+                {"row": 286, "column": 27}
+            ],
+            "Errors":[
+               {"row": 40, "column": 30, "ErrorContent": "Test error 02. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldjlkjdfslkfjsklfkjdsfkjdfskjdsfjkldfkjlfdjkldfkjadfkjdfkjdkjdkjdakjlfjkfkjdfkjdfkjsdfaklfjlkadfjwlefijfldksajfsldkajlfksdaj2)."}
+            ]
+        },
+        {
+            "ID": 2,
+            "FilePath": "test2.c",
+            "Lines": [
+                {"row": 45, "column": 9},
+                {"row": 96, "column": 2},
+                {"row": 172, "column": 18},
+                {"row": 172, "column": 27}
+            ],
+            "Errors":[
+                {"row": 10, "column": 0, "ErrorContent": "Test error 00. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldj)."}
+            ]
+        }
+    ],
+    "ErrorMessages": [
+        {
+            "ID": 0,
+            "FilePath": "test.c",
+            "Position": {"row": 10, "column": 0},
+            "ErrorContent": "Test error 00. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldj)."
+        },
+        {
+            "ID": 1,
+            "FilePath": "test.c",
+            "Position": {"row": 40, "column": 30},
+            "ErrorContent": "Test error 02. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldjlkjdfslkfjsklfkjdsfkjdfskjdsfjkldfkjlfdjkldfkjadfkjdfkjdkjdkjdakjlfjkfkjdfkjdfkjsdfaklfjlkadfjwlefijfldksajfsldkajlfksdaj2)."
+        },
+        {
+            "ID": 2,
+            "FilePath": "test2.c",
+            "Position": {"row": 40, "column": 30},
+            "ErrorContent": "Test error 03. (Test long error content. jjjjjfjlojsdfkljsdfakljfskjlfsdakjlfdskljfdsjklfdsljkfsdljkdfsfkdjfsdkjlfdsjkfdskjdfskjdfskjldsfkjdfksjfksjlkjdsfkdjfsdkfsjlkdfsjakdfjskfdjkdsfjkdfjksfadjkljfsdkjdfsaafsdkjfldjlkjdfslkfjsklfkjdsfkjdfskjdsfjkldfkjlfdjkldfkjadfkjdfkjdkjdkjdakjlfjkfkjdfkjdfkjsdfaklfjlkadfjwlefijfldksajfsldkajlfksdaj2)."
+        }
+    ]
+}
