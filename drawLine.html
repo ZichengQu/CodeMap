@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Document</title>
+        <script src="lib/js/jquery.js"></script>
+
+        <link rel="stylesheet" href="lib/highlight/styles/default.css">
+        <script src="lib/highlight/highlight.pack.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        
+        <style type="text/css">
+            #Sketchpad{
+                border: 0px solid #d3d3d3;
+                position: absolute;
+            }
+            #code{
+                position: absolute;
+                top:-12px;
+            }
+        </style>
+
+        <script>
+                $(function(){
+                    $("#getContent").click();
+                    $("#code").width(document.body.scrollWidth);
+                });
+
+                function getContent(){
+                    var pageURL = document.URL;
+                    var fileName = pageURL.split("mapKey=")[1];
+                    $.ajax({
+                        url:"http://127.0.0.1:3000/getContent",
+                        data:"fileName="+fileName,
+                        dataType:"json",
+                        type:"post",
+                        success:function(data){
+                            var content = data[0].content;
+                            $('pre code').text(content+"\r\n \r\n \r\n                                                                                                                               ");
+                            $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+                            hljs.initHighlighting();
+                            
+                            // console.log(data);
+                            // if(data[2]!=null){
+                            //     console.log(data[2]);//This is the error message
+                            //     for(var i=0;i<data[2].length;i++){
+                            //         console.log("Err row: "+ data[2][i].row);
+                            //         console.log("Err col: "+ data[2][i].column);
+                            //         console.log("Err content: "+ data[2][i].ErrorContent);
+                            //     }
+                            // }
+                            
+                            canvasInit(data);
+                        }
+                    });
+                }
+                
+                function canvasInit(data){
+                    //console.log(data);
+                    var heightWidth = $(".hljs-keyword:first")[0].getBoundingClientRect();
+                    var rowHeight = heightWidth.height;
+                    var colWidth = heightWidth.width / $(".hljs-keyword:first")[0].innerText.length;
+                    var initWidth = 6 * colWidth;
+
+                    var canvas = document.getElementById("Sketchpad");
+                    // canvas.width = window.innerWidth;
+                    canvas.width = document.body.scrollWidth;
+                    canvas.height = $("#code")[0].offsetHeight;
+            
+                    var line = canvas.getContext("2d");
+                    line.beginPath();
+                    line.lineWidth = 1;//the width of the line
+                    line.strokeStyle = "red";//the color of the line
+
+                    var isFirst = true;
+
+                    for(var i=0;i<data[1].length;i++){
+                        var row = data[1][i].row;
+                        var col = data[1][i].column;
+                        var pageRow = row*rowHeight - (1/3)*rowHeight;
+                        var pageCol = initWidth + col * colWidth;
+                        
+                        //console.log("Row = "+row+", Col = "+col);
+                        if(row==-1){
+                            line.closePath();
+                            isFirst = true;
+                            line.beginPath();
+                            continue;
+                        }
+                        if(isFirst){
+                            line.moveTo(pageCol,pageRow);
+                            isFirst = false;
+                        }else{
+                            var preRow = data[1][i-1].row*rowHeight -(1/3)*rowHeight;
+                            var preCol = initWidth + data[1][i-1].column * colWidth;
+                            var PI = Math.PI;
+                            var angle = 60;
+                            var xAngle = Math.atan2((col-preCol), (row-preRow));
+                            xAngle = 360*xAngle/(2*PI);
+                            var L = Math.sqrt((col-preCol)*(col-preCol)+(row-preRow)*(row-preRow));
+                            var L2 = L/2 / Math.cos(angle* 2*PI/360);
+                            CPX1 = col+Math.round(L2 * Math.cos((xAngle+angle)* 2*PI/360));
+                            CPY1 = preCol+Math.round(L2 * Math.sin((xAngle+angle)* 2*PI/360));
+                            line.quadraticCurveTo(pageCol-30,pageRow-30,pageCol,pageRow);
+                            line.stroke();
+
+                            //line.lineTo(pageCol,pageRow);
+                            //line.stroke();
+                        }
+                        line.closePath();
+                        line.beginPath();
+                        line.moveTo(pageCol,pageRow);
+                    }
+
+                    var CharacterNumberPerLine = 65;
+                    var lineSpacing = 30;
+                    var windowColumn = 700;
+                    var windowWidth = 600;
+                    var textOffset = 10
+
+                    if(data[2]!=null){
+                        console.log(data[2]);//This is the error message
+                        for(var i=0;i<data[2].length;i++){
+
+                            // console.log("Err row: "+ data[2][i].row);
+                            // console.log("Err col: "+ data[2][i].column);
+                            // console.log("Err content: "+ data[2][i].ErrorContent);
+                            var row = data[2][i].row;
+                            var col = data[2][i].column;
+
+                            var pageRow = row * rowHeight - ( 1 / 3 ) * rowHeight;
+                            var pageCol = initWidth + col * colWidth;
+                            var errorContent = data[2][i].ErrorContent + " ";
+                            var errorColor = data[2][i].color;
+                            var circleRadius = 3;
+                            var windowRadius = 10;
+                            var lineWidth = 2;
+                            var lineCount = Math.ceil((errorContent.length/CharacterNumberPerLine));
+                            var windowHeight = lineCount * lineSpacing;
+                            var fontStyle = "15px Lucida Console";
+
+                            var errorWindow = canvas.getContext("2d");
+                            strokeRoundRect(errorWindow, windowColumn, pageRow-windowHeight / 2, windowWidth, windowHeight, windowRadius, lineWidth, errorColor);  
+                            errorWindow.font=fontStyle;
+                            for (let i = 0; i < lineCount; i++) {
+                                var errorContentSlice = errorContent.slice(CharacterNumberPerLine * i, CharacterNumberPerLine * (i + 1));
+                                errorWindow.fillText(errorContentSlice, windowColumn + textOffset, pageRow + lineSpacing * (i + 1) - windowHeight / 2 - textOffset);
+                            }
+
+                            var line = canvas.getContext("2d");
+                            line.beginPath();
+                            line.moveTo(pageCol + circleRadius, pageRow);
+                            line.lineTo(windowColumn, pageRow);
+                            line.strokeStyle = errorColor || "#000";
+                            line.stroke();
+                            line.closePath();
+
+                            var circle = canvas.getContext("2d");
+                            circle.beginPath();
+                            circle.arc(pageCol, pageRow, circleRadius, 0, 360);
+                            circle.strokeStyle = errorColor || "#000";
+                            circle.stroke();
+                            circle.closePath();
+                        }
+                    }
+                }
+
+                function strokeRoundRect(cxt, x, y, width, height, radius, lineWidth, strokeColor) {
+                    if (2 * radius > width || 2 * radius > height) { 
+                        return false; 
+                    }
+                    cxt.save();
+                    cxt.translate(x, y); 
+                    drawRoundRectPath(cxt, width, height, radius);
+                    cxt.lineWidth = lineWidth || 2; 
+                    cxt.strokeStyle = strokeColor || "#000";
+                    cxt.stroke();
+                    cxt.restore();
+                }
+            
+                function drawRoundRectPath(cxt, width, height, radius) {
+                    cxt.beginPath(0);
+                    cxt.arc(width - radius, height - radius, radius, 0, Math.PI / 2); 
+                    cxt.lineTo(radius, height);
+                    cxt.arc(radius, height - radius, radius, Math.PI / 2, Math.PI);  
+                    cxt.lineTo(0, radius); 
+                    cxt.arc(radius, radius, radius, Math.PI, Math.PI * 3 / 2);
+                    cxt.lineTo(width - radius, 0);
+                    cxt.arc(width - radius, radius, radius, Math.PI * 3 / 2, Math.PI * 2);
+                    cxt.lineTo(width, height - radius);
+                    cxt.closePath();
+                }
+            </script>
+	</head>
+	<body>
+            <input type="button" id="getContent" style="display: none" onclick="getContent();">
+
+            <pre id="code"><code></code></pre>
+        
+            <canvas id="Sketchpad"></canvas>
+	</body>
+</html>
